@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto DCA Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #171614;
+      --surface: #1c1b19;
+      --surface-2: #22211f;
+      --border: #393836;
+      --text: #cdccca;
+      --muted: #979694;
+      --primary: #4f98a3;
+      --success: #6daa45;
+      --danger: #dd6974;
+      --gold: #e8af34;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .title h1 { font-size: 32px; margin-bottom: 6px; }
+    .title p { color: var(--muted); }
+    .badge {
+      background: rgba(79,152,163,.15);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    .grid-kpi {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: linear-gradient(180deg, var(--surface), var(--surface-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+    .value {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .positive { color: var(--success); }
+    .negative { color: var(--danger); }
+    .grid-main {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .grid-bottom {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 20px;
+    }
+    h2 { font-size: 22px; margin-bottom: 16px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .steps {
+      line-height: 1.7;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .steps strong { color: var(--text); }
+    @media (max-width: 980px) {
+      .grid-kpi, .grid-main, .grid-bottom { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <h1>Crypto DCA Dashboard</h1>
+        <p>Basisversie zonder API of Firebase, zodat je eerst GitHub goed werkend krijgt.</p>
+      </div>
+      <div class="badge">Statische demo dashboard</div>
+    </div>
+
+    <section class="grid-kpi">
+      <div class="card">
+        <div class="label">Portfolio waarde</div>
+        <div class="value">€ 4.604,00</div>
+        <div class="positive">+1,66% vandaag</div>
+      </div>
+      <div class="card">
+        <div class="label">Totale inleg</div>
+        <div class="value">€ 4.095,00</div>
+        <div>Som van aankopen</div>
+      </div>
+      <div class="card">
+        <div class="label">Ongerealiseerde P&amp;L</div>
+        <div class="value">€ 509,00</div>
+        <div class="positive">+12,43% sinds start</div>
+      </div>
+      <div class="card">
+        <div class="label">NEXO in XRP</div>
+        <div class="value">0,7736 XRP</div>
+        <div>Verhouding actuele koers</div>
+      </div>
+    </section>
+
+    <section class="grid-main">
+      <div class="card">
+        <h2>Portfolio verloop</h2>
+        <canvas id="portfolioChart" height="120"></canvas>
+      </div>
+      <div class="card">
+        <h2>Asset allocatie</h2>
+        <canvas id="allocationChart" height="120"></canvas>
+      </div>
+    </section>
+
+    <section class="grid-bottom">
+      <div class="card">
+        <h2>Posities</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>Aantal</th>
+              <th>Gem. koop</th>
+              <th>Actueel</th>
+              <th>Waarde</th>
+              <th>P&amp;L</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>XRP</td>
+              <td>2.050</td>
+              <td>€ 1,89</td>
+              <td>€ 2,12</td>
+              <td>€ 4.346,00</td>
+              <td class="positive">€ 467,00</td>
+            </tr>
+            <tr>
+              <td>NEXO</td>
+              <td>1.400</td>
+              <td>€ 1,28</td>
+              <td>€ 1,64</td>
+              <td>€ 2.296,00</td>
+              <td class="positive">€ 504,00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h2>Eerste GitHub-stappen</h2>
+        <div class="steps">
+          <p><strong>1.</strong> Maak een nieuwe repository in GitHub aan.</p>
+          <p><strong>2.</strong> Voeg precies dit bestand toe met de naam <strong>index.html</strong>.</p>
+          <p><strong>3.</strong> Klik op <strong>Add file</strong> en daarna op <strong>Upload files</strong>.</p>
+          <p><strong>4.</strong> Commit het bestand naar de <strong>main</strong>-branch.</p>
+          <p><strong>5.</strong> Ga naar <strong>Settings → Pages</strong>.</p>
+          <p><strong>6.</strong> Kies bij Source: <strong>Deploy from a branch</strong>.</p>
+          <p><strong>7.</strong> Kies branch <strong>main</strong> en map <strong>/(root)</strong>.</p>
+          <p><strong>8.</strong> Klik op <strong>Save</strong> en wacht 1-2 minuten.</p>
+          <p><strong>9.</strong> Open daarna de GitHub Pages link van je dashboard.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const portfolioChart = new Chart(document.getElementById('portfolioChart'), {
+      type: 'line',
+      data: {
+        labels: ['27 mrt', '28 mrt', '29 mrt', '30 mrt', '31 mrt', '1 apr'],
+        datasets: [{
+          label: 'Portfolio',
+          data: [4210, 4285, 4332, 4476, 4529, 4604],
+          borderColor: '#4f98a3',
+          backgroundColor: 'rgba(79,152,163,0.16)',
+          fill: true,
+          tension: 0.35
+        }]
+      },
+      options: { plugins: { legend: { display: false } } }
+    });
+
+    const allocationChart = new Chart(document.getElementById('allocationChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['XRP', 'NEXO'],
+        datasets: [{
+          data: [4346, 2296],
+          backgroundColor: ['#4f98a3', '#e8af34']
+        }]
+      },
+      options: { plugins: { legend: { labels: { color: '#cdccca' } } } }
+    });
+  </script>
+</body>
+</html>
