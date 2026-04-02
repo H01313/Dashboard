@@ -63,7 +63,7 @@
     <div>Realtime via CoinGecko</div>
   </div>
 </section>
-    ]
+    }
     .title h1 { font-size: 32px; margin-bottom: 6px; }
     .title p { color: var(--muted); }
     .badge {
@@ -263,5 +263,52 @@
       options: { plugins: { legend: { labels: { color: '#cdccca' } } } }
     });
   </script>
+}
+ <script>
+  async function loadLivePrices() {
+    const url = "https://api.coingecko.com/api/v3/simple/price?ids=ripple,nexo&vs_currencies=eur,usd";
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("API fout: " + response.status);
+      }
+
+      const data = await response.json();
+
+      const xrpEur = data.ripple.eur;
+      const xrpUsd = data.ripple.usd;
+      const nexoEur = data.nexo.eur;
+      const nexoUsd = data.nexo.usd;
+      const nexoInXrp = nexoEur / xrpEur;
+
+      document.getElementById("xrpPrice").textContent = "€ " + xrpEur.toFixed(4);
+      document.getElementById("xrpUsd").textContent = "USD: $" + xrpUsd.toFixed(4);
+
+      document.getElementById("nexoPrice").textContent = "€ " + nexoEur.toFixed(4);
+      document.getElementById("nexoUsd").textContent = "USD: $" + nexoUsd.toFixed(4);
+
+      document.getElementById("nexoInXrp").textContent = nexoInXrp.toFixed(4) + " XRP";
+
+      document.getElementById("lastUpdated").textContent =
+        new Date().toLocaleTimeString("nl-NL", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+    } catch (error) {
+      console.error("Fout bij laden van CoinGecko data:", error);
+
+      document.getElementById("xrpPrice").textContent = "Fout";
+      document.getElementById("nexoPrice").textContent = "Fout";
+      document.getElementById("nexoInXrp").textContent = "Fout";
+      document.getElementById("lastUpdated").textContent = "Mislukt";
+    }
+  }
+
+  loadLivePrices();
+
+  setInterval(loadLivePrices, 60000);
+</script> 
 </body>
 </html>
