@@ -4,114 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crypto DCA Dashboard</title>
+  <link rel="stylesheet" href="./style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-  <style>
-    :root {
-      --bg: #171614;
-      --surface: #1c1b19;
-      --surface-2: #22211f;
-      --border: #393836;
-      --text: #cdccca;
-      --muted: #979694;
-      --primary: #4f98a3;
-      --success: #6daa45;
-      --danger: #dd6974;
-      --gold: #e8af34;
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .wrap {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .title h1 { font-size: 32px; margin-bottom: 6px; }
-    .title p { color: var(--muted); }
-    .badge {
-      background: rgba(79,152,163,.15);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-    }
-    .grid-kpi {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    .card {
-      background: linear-gradient(180deg, var(--surface), var(--surface-2));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-    .label {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 10px;
-    }
-    .value {
-      font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .positive { color: var(--success); }
-    .negative { color: var(--danger); }
-    .grid-main {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    .grid-bottom {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 20px;
-    }
-    h2 { font-size: 22px; margin-bottom: 16px; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-    th {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    .steps {
-      line-height: 1.7;
-      color: var(--muted);
-      font-size: 15px;
-    }
-    .steps strong { color: var(--text); }
-    @media (max-width: 980px) {
-      .grid-kpi, .grid-main, .grid-bottom { grid-template-columns: 1fr; }
-      .header { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
 </head>
 <body>
   <div class="wrap">
@@ -165,7 +59,7 @@
       <div class="card">
         <div class="label">Demo status</div>
         <div class="value">Actief</div>
-        <div>Stap 1 API-integratie</div>
+        <div>Stap 2: CSS en JS gesplitst</div>
       </div>
     </section>
 
@@ -214,88 +108,19 @@
           </tbody>
         </table>
       </div>
+
       <div class="card">
         <h2>Wat werkt nu?</h2>
         <div class="steps">
-          <p><strong>1.</strong> Het dashboard toont nu direct de live prijzen van XRP en NEXO.</p>
-          <p><strong>2.</strong> Je ziet ook direct de verhouding van NEXO omgerekend naar XRP.</p>
-          <p><strong>3.</strong> De prijsdata wordt elke 60 seconden opnieuw geladen.</p>
-          <p><strong>4.</strong> Als dit werkt, is stap 2 het opsplitsen naar aparte CSS- en JS-bestanden.</p>
+          <p><strong>1.</strong> Het dashboard toont live prijzen van XRP en NEXO.</p>
+          <p><strong>2.</strong> De verhouding NEXO omgerekend naar XRP staat erin.</p>
+          <p><strong>3.</strong> De prijsdata ververst elke 60 seconden.</p>
+          <p><strong>4.</strong> Daarna kunnen we pas aankooplogica en Firestore toevoegen.</p>
         </div>
       </div>
     </section>
   </div>
 
-  <script>
-    const portfolioChart = new Chart(document.getElementById('portfolioChart'), {
-      type: 'line',
-      data: {
-        labels: ['27 mrt', '28 mrt', '29 mrt', '30 mrt', '31 mrt', '1 apr'],
-        datasets: [{
-          label: 'Portfolio',
-          data: [4210, 4285, 4332, 4476, 4529, 4604],
-          borderColor: '#4f98a3',
-          backgroundColor: 'rgba(79,152,163,0.16)',
-          fill: true,
-          tension: 0.35
-        }]
-      },
-      options: { plugins: { legend: { display: false } } }
-    });
-
-    const allocationChart = new Chart(document.getElementById('allocationChart'), {
-      type: 'doughnut',
-      data: {
-        labels: ['XRP', 'NEXO'],
-        datasets: [{
-          data: [4346, 2296],
-          backgroundColor: ['#4f98a3', '#e8af34']
-        }]
-      },
-      options: { plugins: { legend: { labels: { color: '#cdccca' } } } }
-    });
-
-    async function loadLivePrices() {
-      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ripple,nexo&vs_currencies=eur,usd';
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('API fout: ' + response.status);
-        }
-
-        const data = await response.json();
-
-        const xrpEur = data.ripple.eur;
-        const xrpUsd = data.ripple.usd;
-        const nexoEur = data.nexo.eur;
-        const nexoUsd = data.nexo.usd;
-        const ratio = nexoEur / xrpEur;
-
-        document.getElementById('xrpPrice').textContent = '€ ' + xrpEur.toFixed(4);
-        document.getElementById('xrpUsd').textContent = 'USD: $' + xrpUsd.toFixed(4);
-
-        document.getElementById('nexoPrice').textContent = '€ ' + nexoEur.toFixed(4);
-        document.getElementById('nexoUsd').textContent = 'USD: $' + nexoUsd.toFixed(4);
-
-        document.getElementById('nexoInXrp').textContent = ratio.toFixed(4) + ' XRP';
-
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString('nl-NL', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-      } catch (error) {
-        console.error('Fout bij laden CoinGecko data:', error);
-        document.getElementById('xrpPrice').textContent = 'Fout';
-        document.getElementById('nexoPrice').textContent = 'Fout';
-        document.getElementById('nexoInXrp').textContent = 'Fout';
-        document.getElementById('lastUpdated').textContent = 'Mislukt';
-      }
-    }
-
-    loadLivePrices();
-    setInterval(loadLivePrices, 60000);
-  </script>
+  <script src="./app.js"></script>
 </body>
 </html>
