@@ -12,9 +12,9 @@
     <div class="header">
       <div class="title">
         <h1>Crypto DCA Dashboard</h1>
-        <p>Basisversie met live CoinGecko prijzen voor XRP en NEXO.</p>
+        <p>Basisversie met live CoinGecko prijzen en lokale DCA-aankopen.</p>
       </div>
-      <div class="badge">Statische demo + live prijzen</div>
+      <div class="badge">Stap 3: Lokale aankopen en DCA</div>
     </div>
 
     <section class="grid-kpi">
@@ -40,6 +40,26 @@
       </div>
     </section>
 
+    <section class="card" style="grid-column: 1 / -1; margin-bottom: 24px;">
+      <h2>Aankoop toevoegen</h2>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px;">
+        <select id="purchaseCoin">
+          <option value="XRP">XRP</option>
+          <option value="NEXO">NEXO</option>
+        </select>
+        <input id="purchaseAmount" type="number" step="0.01" placeholder="Aantal">
+        <input id="purchasePrice" type="number" step="0.01" placeholder="Prijs €">
+        <input id="purchaseFees" type="number" step="0.01" placeholder="Kosten" value="0">
+        <button onclick="addPurchase()">Toevoegen</button>
+      </div>
+      <div style="font-size: 14px; color: var(--muted);">
+        <strong>Totaal aankopen:</strong> <span id="totalPurchases">0</span> | 
+        <strong>Inleg:</strong> <span id="totalCostLocal">€ 0</span> | 
+        <strong>Gem. prijs XRP:</strong> <span id="avgXRP">€ -</span> | 
+        <strong>Gem. prijs NEXO:</strong> <span id="avgNEXO">€ -</span>
+      </div>
+    </section>
+
     <section class="grid-kpi">
       <div class="card">
         <div class="label">Portfolio waarde</div>
@@ -48,74 +68,78 @@
       </div>
       <div class="card">
         <div class="label">Totale inleg</div>
-        <div class="value">€ 4.095,00</div>
+        <div class="value" id="totalCost">€ 4.095,00</div>
         <div>Som van aankopen</div>
       </div>
       <div class="card">
         <div class="label">Ongerealiseerde P&amp;L</div>
-        <div class="value">€ 509,00</div>
+        <div class="value" id="unrealizedPnL">€ 509,00</div>
         <div class="positive">+12,43% sinds start</div>
       </div>
       <div class="card">
-        <div class="label">Demo status</div>
-        <div class="value">Actief</div>
-        <div>Stap 2: CSS en JS gesplitst</div>
+        <div class="label">NEXO in XRP</div>
+        <div class="value" id="nexoInXrp">0,7736 XRP</div>
+        <div>Verhouding actuele koers</div>
       </div>
     </section>
 
     <section class="grid-main">
       <div class="card">
-        <h2>Portfolio verloop</h2>
-        <canvas id="portfolioChart" height="120"></canvas>
+        <h2>Asset positie</h2>
+        <div style="font-size: 14px; margin-top: 8px;">
+          <strong>XRP:</strong> <span id="totalXRP">0</span> | 
+          <strong>NEXO:</strong> <span id="totalNEXO">0</span>
+        </div>
       </div>
       <div class="card">
-        <h2>Asset allocatie</h2>
-        <canvas id="allocationChart" height="120"></canvas>
+        <h2>Portfolio verloop</h2>
+        <canvas id="portfolioChart" height="120"></canvas>
       </div>
     </section>
 
     <section class="grid-bottom">
       <div class="card">
         <h2>Posities</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Coin</th>
-              <th>Aantal</th>
-              <th>Gem. koop</th>
-              <th>Actueel</th>
-              <th>Waarde</th>
-              <th>P&amp;L</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>XRP</td>
-              <td>2.050</td>
-              <td>€ 1,89</td>
-              <td>€ 2,12</td>
-              <td>€ 4.346,00</td>
-              <td class="positive">€ 467,00</td>
-            </tr>
-            <tr>
-              <td>NEXO</td>
-              <td>1.400</td>
-              <td>€ 1,28</td>
-              <td>€ 1,64</td>
-              <td>€ 2.296,00</td>
-              <td class="positive">€ 504,00</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Coin</th>
+                <th>Aantal</th>
+                <th>Gem. koop</th>
+                <th>Actueel</th>
+                <th>Waarde</th>
+                <th>P&amp;L</th>
+              </tr>
+            </thead>
+            <tbody id="positionsTable">
+              <tr>
+                <td>XRP</td>
+                <td>2.050</td>
+                <td>€ 1,89</td>
+                <td>€ 2,12</td>
+                <td>€ 4.346,00</td>
+                <td class="positive">€ 467,00</td>
+              </tr>
+              <tr>
+                <td>NEXO</td>
+                <td>1.400</td>
+                <td>€ 1,28</td>
+                <td>€ 1,64</td>
+                <td>€ 2.296,00</td>
+                <td class="positive">€ 504,00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-
       <div class="card">
         <h2>Wat werkt nu?</h2>
-        <div class="steps">
-          <p><strong>1.</strong> Het dashboard toont live prijzen van XRP en NEXO.</p>
-          <p><strong>2.</strong> De verhouding NEXO omgerekend naar XRP staat erin.</p>
-          <p><strong>3.</strong> De prijsdata ververst elke 60 seconden.</p>
-          <p><strong>4.</strong> Daarna kunnen we pas aankooplogica en Firestore toevoegen.</p>
+        <div style="line-height: 1.7; font-size: 15px; color: var(--muted);">
+          <p><strong>1.</strong> Live XRP en NEXO prijzen via CoinGecko.</p>
+          <p><strong>2.</strong> Aankoopformulier registreert regels lokaal in de browser.</p>
+          <p><strong>3.</strong> Totale inleg, aantal XRP/NEXO en gemiddelde prijzen worden berekend.</p>
+          <p><strong>4.</strong> De volgende stap is Firestore-integratie voor permanente opslag.</p>
         </div>
       </div>
     </section>
