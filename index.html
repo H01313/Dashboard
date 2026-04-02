@@ -38,32 +38,6 @@
       gap: 16px;
       margin-bottom: 24px;
     }
-    <section class="grid-kpi" style="margin-bottom: 24px;">
-  <div class="card">
-    <div class="label">XRP live prijs</div>
-    <div class="value" id="xrpPrice">Laden...</div>
-    <div id="xrpUsd">USD: -</div>
-  </div>
-
-  <div class="card">
-    <div class="label">NEXO live prijs</div>
-    <div class="value" id="nexoPrice">Laden...</div>
-    <div id="nexoUsd">USD: -</div>
-  </div>
-
-  <div class="card">
-    <div class="label">NEXO in XRP</div>
-    <div class="value" id="nexoInXrp">Laden...</div>
-    <div>1 NEXO uitgedrukt in XRP</div>
-  </div>
-
-  <div class="card">
-    <div class="label">Laatste update</div>
-    <div class="value" id="lastUpdated">-</div>
-    <div>Realtime via CoinGecko</div>
-  </div>
-</section>
-    }
     .title h1 { font-size: 32px; margin-bottom: 6px; }
     .title p { color: var(--muted); }
     .badge {
@@ -144,10 +118,33 @@
     <div class="header">
       <div class="title">
         <h1>Crypto DCA Dashboard</h1>
-        <p>Basisversie zonder API of Firebase, zodat je eerst GitHub goed werkend krijgt.</p>
+        <p>Basisversie met live CoinGecko prijzen voor XRP en NEXO.</p>
       </div>
-      <div class="badge">Statische demo dashboard</div>
+      <div class="badge">Statische demo + live prijzen</div>
     </div>
+
+    <section class="grid-kpi">
+      <div class="card">
+        <div class="label">XRP live prijs</div>
+        <div class="value" id="xrpPrice">Laden...</div>
+        <div id="xrpUsd">USD: -</div>
+      </div>
+      <div class="card">
+        <div class="label">NEXO live prijs</div>
+        <div class="value" id="nexoPrice">Laden...</div>
+        <div id="nexoUsd">USD: -</div>
+      </div>
+      <div class="card">
+        <div class="label">NEXO in XRP</div>
+        <div class="value" id="nexoInXrp">Laden...</div>
+        <div>1 NEXO uitgedrukt in XRP</div>
+      </div>
+      <div class="card">
+        <div class="label">Laatste update</div>
+        <div class="value" id="lastUpdated">-</div>
+        <div>Realtime via CoinGecko</div>
+      </div>
+    </section>
 
     <section class="grid-kpi">
       <div class="card">
@@ -166,9 +163,9 @@
         <div class="positive">+12,43% sinds start</div>
       </div>
       <div class="card">
-        <div class="label">NEXO in XRP</div>
-        <div class="value">0,7736 XRP</div>
-        <div>Verhouding actuele koers</div>
+        <div class="label">Demo status</div>
+        <div class="value">Actief</div>
+        <div>Stap 1 API-integratie</div>
       </div>
     </section>
 
@@ -218,17 +215,12 @@
         </table>
       </div>
       <div class="card">
-        <h2>Eerste GitHub-stappen</h2>
+        <h2>Wat werkt nu?</h2>
         <div class="steps">
-          <p><strong>1.</strong> Maak een nieuwe repository in GitHub aan.</p>
-          <p><strong>2.</strong> Voeg precies dit bestand toe met de naam <strong>index.html</strong>.</p>
-          <p><strong>3.</strong> Klik op <strong>Add file</strong> en daarna op <strong>Upload files</strong>.</p>
-          <p><strong>4.</strong> Commit het bestand naar de <strong>main</strong>-branch.</p>
-          <p><strong>5.</strong> Ga naar <strong>Settings → Pages</strong>.</p>
-          <p><strong>6.</strong> Kies bij Source: <strong>Deploy from a branch</strong>.</p>
-          <p><strong>7.</strong> Kies branch <strong>main</strong> en map <strong>/(root)</strong>.</p>
-          <p><strong>8.</strong> Klik op <strong>Save</strong> en wacht 1-2 minuten.</p>
-          <p><strong>9.</strong> Open daarna de GitHub Pages link van je dashboard.</p>
+          <p><strong>1.</strong> Het dashboard toont nu direct de live prijzen van XRP en NEXO.</p>
+          <p><strong>2.</strong> Je ziet ook direct de verhouding van NEXO omgerekend naar XRP.</p>
+          <p><strong>3.</strong> De prijsdata wordt elke 60 seconden opnieuw geladen.</p>
+          <p><strong>4.</strong> Als dit werkt, is stap 2 het opsplitsen naar aparte CSS- en JS-bestanden.</p>
         </div>
       </div>
     </section>
@@ -262,53 +254,48 @@
       },
       options: { plugins: { legend: { labels: { color: '#cdccca' } } } }
     });
-  </script>
-}
- <script>
-  async function loadLivePrices() {
-    const url = "https://api.coingecko.com/api/v3/simple/price?ids=ripple,nexo&vs_currencies=eur,usd";
 
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("API fout: " + response.status);
-      }
+    async function loadLivePrices() {
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=ripple,nexo&vs_currencies=eur,usd';
 
-      const data = await response.json();
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('API fout: ' + response.status);
+        }
 
-      const xrpEur = data.ripple.eur;
-      const xrpUsd = data.ripple.usd;
-      const nexoEur = data.nexo.eur;
-      const nexoUsd = data.nexo.usd;
-      const nexoInXrp = nexoEur / xrpEur;
+        const data = await response.json();
 
-      document.getElementById("xrpPrice").textContent = "€ " + xrpEur.toFixed(4);
-      document.getElementById("xrpUsd").textContent = "USD: $" + xrpUsd.toFixed(4);
+        const xrpEur = data.ripple.eur;
+        const xrpUsd = data.ripple.usd;
+        const nexoEur = data.nexo.eur;
+        const nexoUsd = data.nexo.usd;
+        const ratio = nexoEur / xrpEur;
 
-      document.getElementById("nexoPrice").textContent = "€ " + nexoEur.toFixed(4);
-      document.getElementById("nexoUsd").textContent = "USD: $" + nexoUsd.toFixed(4);
+        document.getElementById('xrpPrice').textContent = '€ ' + xrpEur.toFixed(4);
+        document.getElementById('xrpUsd').textContent = 'USD: $' + xrpUsd.toFixed(4);
 
-      document.getElementById("nexoInXrp").textContent = nexoInXrp.toFixed(4) + " XRP";
+        document.getElementById('nexoPrice').textContent = '€ ' + nexoEur.toFixed(4);
+        document.getElementById('nexoUsd').textContent = 'USD: $' + nexoUsd.toFixed(4);
 
-      document.getElementById("lastUpdated").textContent =
-        new Date().toLocaleTimeString("nl-NL", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit"
+        document.getElementById('nexoInXrp').textContent = ratio.toFixed(4) + ' XRP';
+
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString('nl-NL', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
         });
-    } catch (error) {
-      console.error("Fout bij laden van CoinGecko data:", error);
-
-      document.getElementById("xrpPrice").textContent = "Fout";
-      document.getElementById("nexoPrice").textContent = "Fout";
-      document.getElementById("nexoInXrp").textContent = "Fout";
-      document.getElementById("lastUpdated").textContent = "Mislukt";
+      } catch (error) {
+        console.error('Fout bij laden CoinGecko data:', error);
+        document.getElementById('xrpPrice').textContent = 'Fout';
+        document.getElementById('nexoPrice').textContent = 'Fout';
+        document.getElementById('nexoInXrp').textContent = 'Fout';
+        document.getElementById('lastUpdated').textContent = 'Mislukt';
+      }
     }
-  }
 
-  loadLivePrices();
-
-  setInterval(loadLivePrices, 60000);
-</script> 
+    loadLivePrices();
+    setInterval(loadLivePrices, 60000);
+  </script>
 </body>
 </html>
