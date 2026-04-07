@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl" data-theme="dark">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,96 +9,93 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="header">
-      <div class="title">
+    <header class="header">
+      <div class="title-block">
         <h1>Crypto DCA Dashboard</h1>
-        <p>Basisversie met live CoinGecko prijzen en lokale DCA-aankopen.</p>
+        <p>Live XRP en NEXO prijzen, lokale DCA-aankopen en portfolio-overzicht.</p>
       </div>
-      <div class="badge">Stap 3: Lokale aankopen en DCA</div>
-    </div>
+      <div class="badge">Werkende GitHub Pages versie</div>
+    </header>
 
     <section class="grid-kpi">
-      <div class="card">
+      <article class="card">
         <div class="label">XRP live prijs</div>
         <div class="value" id="xrpPrice">Laden...</div>
-        <div id="xrpUsd">USD: -</div>
-      </div>
-      <div class="card">
+        <div class="subtext" id="xrpUsd">USD: -</div>
+      </article>
+      <article class="card">
         <div class="label">NEXO live prijs</div>
         <div class="value" id="nexoPrice">Laden...</div>
-        <div id="nexoUsd">USD: -</div>
-      </div>
-      <div class="card">
+        <div class="subtext" id="nexoUsd">USD: -</div>
+      </article>
+      <article class="card">
         <div class="label">NEXO in XRP</div>
-        <div class="value" id="nexoInXrp">Laden...</div>
-        <div>1 NEXO uitgedrukt in XRP</div>
-      </div>
-      <div class="card">
+        <div class="value" id="nexoRatio">Laden...</div>
+        <div class="subtext">1 NEXO omgerekend naar XRP</div>
+      </article>
+      <article class="card">
         <div class="label">Laatste update</div>
-        <div class="value" id="lastUpdated">-</div>
-        <div>Realtime via CoinGecko</div>
-      </div>
+        <div class="value small" id="lastUpdated">-</div>
+        <div class="subtext">Realtime via CoinGecko</div>
+      </article>
     </section>
 
-    <section class="card" style="grid-column: 1 / -1; margin-bottom: 24px;">
+    <section class="card form-card">
       <h2>Aankoop toevoegen</h2>
-      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px;">
+      <div class="purchase-grid">
         <select id="purchaseCoin">
           <option value="XRP">XRP</option>
           <option value="NEXO">NEXO</option>
         </select>
-        <input id="purchaseAmount" type="number" step="0.01" placeholder="Aantal">
-        <input id="purchasePrice" type="number" step="0.01" placeholder="Prijs €">
-        <input id="purchaseFees" type="number" step="0.01" placeholder="Kosten" value="0">
-        <button onclick="addPurchase()">Toevoegen</button>
+        <input id="purchaseAmount" type="number" step="0.0001" placeholder="Aantal" />
+        <input id="purchasePrice" type="number" step="0.0001" placeholder="Prijs in EUR" />
+        <input id="purchaseFees" type="number" step="0.01" placeholder="Kosten" value="0" />
+        <button id="addPurchaseBtn">Toevoegen</button>
       </div>
-      <div style="font-size: 14px; color: var(--muted);">
-        <strong>Totaal aankopen:</strong> <span id="totalPurchases">0</span> | 
-        <strong>Inleg:</strong> <span id="totalCostLocal">€ 0</span> | 
-        <strong>Gem. prijs XRP:</strong> <span id="avgXRP">€ -</span> | 
-        <strong>Gem. prijs NEXO:</strong> <span id="avgNEXO">€ -</span>
+      <div class="summary-row">
+        <span><strong>Totaal aankopen:</strong> <span id="totalPurchases">0</span></span>
+        <span><strong>Inleg:</strong> <span id="totalCostLocal">€ 0,00</span></span>
+        <span><strong>Gem. prijs XRP:</strong> <span id="avgXRP">€ -</span></span>
+        <span><strong>Gem. prijs NEXO:</strong> <span id="avgNEXO">€ -</span></span>
       </div>
     </section>
 
     <section class="grid-kpi">
-      <div class="card">
+      <article class="card">
         <div class="label">Portfolio waarde</div>
-        <div class="value">€ 4.604,00</div>
-        <div class="positive">+1,66% vandaag</div>
-      </div>
-      <div class="card">
+        <div class="value" id="portfolioValue">€ 0,00</div>
+        <div class="subtext" id="portfolioHint">Live berekend op basis van aankopen</div>
+      </article>
+      <article class="card">
         <div class="label">Totale inleg</div>
-        <div class="value" id="totalCost">€ 4.095,00</div>
-        <div>Som van aankopen</div>
-      </div>
-      <div class="card">
+        <div class="value" id="totalInvested">€ 0,00</div>
+        <div class="subtext">Som van aankopen + kosten</div>
+      </article>
+      <article class="card">
         <div class="label">Ongerealiseerde P&amp;L</div>
-        <div class="value" id="unrealizedPnL">€ 509,00</div>
-        <div class="positive">+12,43% sinds start</div>
-      </div>
-      <div class="card">
-        <div class="label">NEXO in XRP</div>
-        <div class="value" id="nexoInXrp">0,7736 XRP</div>
-        <div>Verhouding actuele koers</div>
-      </div>
+        <div class="value" id="unrealizedPnL">€ 0,00</div>
+        <div class="subtext" id="unrealizedPnLPct">0,00%</div>
+      </article>
+      <article class="card">
+        <div class="label">Asset positie</div>
+        <div class="value small"><span id="totalXRP">0</span> XRP</div>
+        <div class="subtext"><span id="totalNEXO">0</span> NEXO</div>
+      </article>
     </section>
 
     <section class="grid-main">
-      <div class="card">
-        <h2>Asset positie</h2>
-        <div style="font-size: 14px; margin-top: 8px;">
-          <strong>XRP:</strong> <span id="totalXRP">0</span> | 
-          <strong>NEXO:</strong> <span id="totalNEXO">0</span>
-        </div>
-      </div>
-      <div class="card">
+      <article class="card">
         <h2>Portfolio verloop</h2>
-        <canvas id="portfolioChart" height="120"></canvas>
-      </div>
+        <canvas id="portfolioChart" height="110"></canvas>
+      </article>
+      <article class="card">
+        <h2>Allocatie</h2>
+        <canvas id="allocationChart" height="110"></canvas>
+      </article>
     </section>
 
     <section class="grid-bottom">
-      <div class="card">
+      <article class="card">
         <h2>Posities</h2>
         <div class="table-wrap">
           <table>
@@ -113,35 +110,20 @@
               </tr>
             </thead>
             <tbody id="positionsTable">
-              <tr>
-                <td>XRP</td>
-                <td>2.050</td>
-                <td>€ 1,89</td>
-                <td>€ 2,12</td>
-                <td>€ 4.346,00</td>
-                <td class="positive">€ 467,00</td>
-              </tr>
-              <tr>
-                <td>NEXO</td>
-                <td>1.400</td>
-                <td>€ 1,28</td>
-                <td>€ 1,64</td>
-                <td>€ 2.296,00</td>
-                <td class="positive">€ 504,00</td>
-              </tr>
+              <tr><td colspan="6">Nog geen aankopen toegevoegd.</td></tr>
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="card">
-        <h2>Wat werkt nu?</h2>
-        <div style="line-height: 1.7; font-size: 15px; color: var(--muted);">
-          <p><strong>1.</strong> Live XRP en NEXO prijzen via CoinGecko.</p>
-          <p><strong>2.</strong> Aankoopformulier registreert regels lokaal in de browser.</p>
-          <p><strong>3.</strong> Totale inleg, aantal XRP/NEXO en gemiddelde prijzen worden berekend.</p>
-          <p><strong>4.</strong> De volgende stap is Firestore-integratie voor permanente opslag.</p>
+      </article>
+      <article class="card">
+        <h2>Jouw volgende stap</h2>
+        <div class="steps">
+          <p><strong>1.</strong> Test eerst of live prijzen werken.</p>
+          <p><strong>2.</strong> Voeg daarna een paar XRP- en NEXO-aankopen toe.</p>
+          <p><strong>3.</strong> Controleer of totale inleg, waarde en P&amp;L kloppen.</p>
+          <p><strong>4.</strong> Pas daarna gaan we naar Firestore en snapshots.</p>
         </div>
-      </div>
+      </article>
     </section>
   </div>
 
